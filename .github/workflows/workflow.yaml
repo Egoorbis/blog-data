@@ -57,8 +57,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraformPlan
-          path: "${{ env.tf_actions_working_dir }}/terraform.tfplan"
+          path: "terraform.tfplan"
 
       - name: 'Terraform Apply using Plan File'
         id: apply 
-        run: terraform apply "${{ env.tf_actions_working_dir }}/terraform.tfplan"
+        run: terraform apply terraform.tfplan
