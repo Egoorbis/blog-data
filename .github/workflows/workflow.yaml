@@ -28,7 +28,6 @@ jobs:
       BACKEND_KEY: ${{ secrets.BACKEND_KEY}}
 
     steps:
-
       - name: 'Code Checkout'
         uses: actions/checkout@v4
 
