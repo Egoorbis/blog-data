@@ -43,7 +43,7 @@ jobs:
           # ignore-unfixed: true # Optional: Ignore unfixed vulnerabilities
           skip-dirs: '.terraform' # Optional: Skip directories like .terraform
           scanners: "secret, vuln, misconfig"
-          trivyignores: '/.trivyignore'
+          trivyignores: ".trivyignore"
           
 
 
