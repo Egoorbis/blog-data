@@ -19,9 +19,9 @@ jobs:
         working-directory: "aks_byocni_cilium"
     env:
       TERRAFORM_LOG: "WARN"
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       BACKEND_RESOURCE_GROUP: ${{ secrets.BACKEND_RESOURCE_GROUP }}
       BACKEND_STORAGE_ACCOUNT: ${{ secrets.BACKEND_STORAGE_ACCOUNT }}
       BACKEND_CONTAINER_NAME: ${{ secrets.BACKEND_CONTAINER_NAME }}
@@ -57,6 +57,14 @@ jobs:
         with:
           name: terraformPlan
           path: "tfplan"
+      
+      - name: "Run trivy"
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          scan-type: "fs"
+          scan-ref: "tfplan"
+          format: 'table' 
+  
 
       - name: "Terraform Apply using Plan File"
         id: apply
