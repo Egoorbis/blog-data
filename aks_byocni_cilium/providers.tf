@@ -1,4 +1,8 @@
 terraform {
+  backend "azurerm" {
+    use_azuread_auth = true
+    use_oidc         = true
+  }
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -46,17 +50,3 @@ provider "helm" {
     }
   }
 }
-
-terraform {
-  backend "azurerm" {
-    use_azuread_auth = true
-    use_oidc         = true
-  }
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.71"
-    }
-  }
-}
-
