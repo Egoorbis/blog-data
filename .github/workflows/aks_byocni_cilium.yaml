@@ -19,12 +19,12 @@ jobs:
         working-directory: "aks_byocni_cilium"
     env:
       TERRAFORM_LOG: "WARN"
-      ARM_CLIENT_ID: $
-      ARM_SUBSCRIPTION_ID: $
-      ARM_TENANT_ID: $
-      BACKEND_RG: $
-      BACKEND_SG: $
-      BACKEND_CONTAINER: $
+      AZURE_CLIENT_ID: $
+      AZURE_SUBSCRIPTION_ID: $
+      AZURE_TENANT_ID: $
+      BACKEND_RESOURCE_GROUP: $
+      BACKEND_STORAGE_ACCOUNT: $
+      BACKEND_CONTAINER_NAME: $
       BACKEND_KEY: $
 
     steps:
@@ -42,22 +42,22 @@ jobs:
         id: init
         run: |
           terraform init \
-            -backend-config="resource_group_name=$BACKEND_RG" \
-            -backend-config="storage_account_name=$BACKEND_SG" \
-            -backend-config="container_name=$BACKEND_CONTAINER" \
+            -backend-config="resource_group_name=$BACKEND_RESOURCE_GROUP" \
+            -backend-config="storage_account_name=$BACKEND_STORAGE_ACCOUNT" \
+            -backend-config="container_name=$BACKEND_CONTAINER_NAME" \
             -backend-config="key=$BACKEND_KEY" \
 
       - name: "Terraform Plan"
         id: plan
         run: |
-          terraform plan -out=terraform.tfplan
+          terraform plan -out=tfplan
 
       - name: "Upload Terraform Plan to Working Directory"
         uses: actions/upload-artifact@v4
         with:
           name: terraformPlan
-          path: "terraform.tfplan"
+          path: "tfplan"
 
       - name: "Terraform Apply using Plan File"
         id: apply
-        run: terraform apply terraform.tfplan
+        run: terraform apply tfplan
