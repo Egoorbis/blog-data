@@ -30,7 +30,7 @@ resource "azuread_group_member" "aks-admins" {
 
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "~> 0.4.1"
+  version = "~> 0.4.2"
 }
 
 resource "azurerm_resource_group" "aks-rg" {
