@@ -16,8 +16,9 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: "aks_byocni_cilium"
+        # working-directory: "aks_byocni_cilium"
     env:
+      TERRAFORM_DIR: aks_byocni_cilium 
       TERRAFORM_LOG: "WARN"
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -43,7 +44,7 @@ jobs:
           # ignore-unfixed: true # Optional: Ignore unfixed vulnerabilities
           skip-dirs: '.terraform' # Optional: Skip directories like .terraform
           scanners: "secret, vuln, misconfig"
-          trivyignores: "aks_byocni_cilium/.trivyignore"
+          trivyignores: "{{ env.TERRAFORM_DIR }}/.trivyignore"
           
 
 
