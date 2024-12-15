@@ -16,7 +16,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: "tf"
+        working-directory: "aks_byocni_cilium"
     env:
       TERRAFORM_LOG: "WARN"
       ARM_CLIENT_ID: $
