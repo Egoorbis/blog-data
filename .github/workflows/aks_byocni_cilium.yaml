@@ -19,13 +19,13 @@ jobs:
         working-directory: "aks_byocni_cilium"
     env:
       TERRAFORM_LOG: "WARN"
-      AZURE_CLIENT_ID: $
-      AZURE_SUBSCRIPTION_ID: $
-      AZURE_TENANT_ID: $
-      BACKEND_RESOURCE_GROUP: $
-      BACKEND_STORAGE_ACCOUNT: $
-      BACKEND_CONTAINER_NAME: $
-      BACKEND_KEY: $
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      BACKEND_RESOURCE_GROUP: ${{ secrets.BACKEND_RESOURCE_GROUP }}
+      BACKEND_STORAGE_ACCOUNT: ${{ secrets.BACKEND_STORAGE_ACCOUNT }}
+      BACKEND_CONTAINER_NAME: ${{ secrets.BACKEND_CONTAINER_NAME }}
+      BACKEND_KEY: ${{ secrets.BACKEND_KEY }}
 
     steps:
       - name: "Code Checkout"
