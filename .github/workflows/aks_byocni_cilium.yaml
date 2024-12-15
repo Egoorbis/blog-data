@@ -32,10 +32,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Trivy IaC scan
-        uses: aquasecurity/trivy-action@master # Use 'master' for latest or pin a specific version
+        uses: aquasecurity/trivy-action@0.29.0 # Use 'master' for latest or pin a specific version
         with:
           scan-type: 'config' # Important: Scan IaC configuration
-          scan-ref: 'aks_byocni_cilium'
           format: 'table'
           exit-code: '1'       # Fail the workflow if vulnerabilities are found
           # severity: 'CRITICAL,HIGH' # Only check for critical and high vulnerabilities (optional)
