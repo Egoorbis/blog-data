@@ -36,6 +36,7 @@ jobs:
         uses: aquasecurity/trivy-action@master # Use 'master' for latest or pin a specific version
         with:
           scan-type: 'config' # Important: Scan IaC configuration
+          scan-ref: .
           format: 'table'
           exit-code: '1'       # Fail the workflow if vulnerabilities are found
           # severity: 'CRITICAL,HIGH' # Only check for critical and high vulnerabilities (optional)
