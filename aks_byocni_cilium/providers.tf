@@ -18,11 +18,20 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "2.4.1"
     }
+
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "3.0.2"
+    }
   }
 }
 
 provider "azurerm" {
   features {}
+  use_oidc = true
+}
+
+provider "azuread" {
   use_oidc = true
 }
 
