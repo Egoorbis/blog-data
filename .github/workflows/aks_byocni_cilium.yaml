@@ -31,6 +31,18 @@ jobs:
       - name: "Code Checkout"
         uses: actions/checkout@v4
 
+      - name: Run Trivy IaC scan
+        uses: aquasecurity/trivy-action@master # Use 'master' for latest or pin a specific version
+        with:
+          scan-type: 'config' # Important: Scan IaC configuration
+          format: 'table'
+          exit-code: '1'       # Fail the workflow if vulnerabilities are found
+          severity: 'CRITICAL,HIGH' # Only check for critical and high vulnerabilities (optional)
+          # Specify the directory containing your Terraform files (if not at the root)
+          # config-policy-namespaces: 'terraform' # Optional: Specify the policy namespace
+          # ignore-unfixed: true # Optional: Ignore unfixed vulnerabilities
+          # skip-dirs: '.terraform' # Optional: Skip directories like .terraform
+
       - name: "Install Terraform"
         uses: hashicorp/setup-terraform@v3
 
@@ -57,14 +69,6 @@ jobs:
         with:
           name: terraformPlan
           path: "tfplan"
-      
-      - name: "Run trivy"
-        uses: aquasecurity/trivy-action@0.29.0
-        with:
-          scan-type: "fs"
-          scan-ref: "."
-          format: 'table'
-  
 
       - name: "Terraform Apply using Plan File"
         id: apply
