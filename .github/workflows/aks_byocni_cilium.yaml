@@ -62,8 +62,8 @@ jobs:
         uses: aquasecurity/trivy-action@0.29.0
         with:
           scan-type: "fs"
-          scan-ref: "tfplan"
-          format: 'table' 
+          scan-ref: "."
+          format: 'table'
   
 
       - name: "Terraform Apply using Plan File"
