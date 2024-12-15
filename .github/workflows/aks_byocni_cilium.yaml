@@ -16,7 +16,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        # working-directory: "aks_byocni_cilium"
+        working-directory: ${{ env.TERRAFORM_DIR }}
     env:
       TERRAFORM_DIR: aks_byocni_cilium 
       TERRAFORM_LOG: "WARN"
