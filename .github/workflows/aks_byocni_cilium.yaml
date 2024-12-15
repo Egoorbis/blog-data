@@ -26,6 +26,7 @@ jobs:
       BACKEND_STORAGE_ACCOUNT: ${{ secrets.BACKEND_STORAGE_ACCOUNT }}
       BACKEND_CONTAINER_NAME: ${{ secrets.BACKEND_CONTAINER_NAME }}
       BACKEND_KEY: ${{ secrets.BACKEND_KEY }}
+      TRIVY_DEBUG: "true" # Enable debug logging
 
     steps:
       - name: "Code Checkout"
@@ -43,6 +44,7 @@ jobs:
           # ignore-unfixed: true # Optional: Ignore unfixed vulnerabilities
           skip-dirs: '.terraform' # Optional: Skip directories like .terraform
           scanners: "secret, vuln, misconfig"
+          
 
 
       - name: "Install Terraform"
