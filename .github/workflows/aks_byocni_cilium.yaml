@@ -43,6 +43,8 @@ jobs:
           # ignore-unfixed: true # Optional: Ignore unfixed vulnerabilities
           skip-dirs: '.terraform' # Optional: Skip directories like .terraform
           scanners: "secret, vuln, misconfig"
+          debug: true # Add this for debugging
+
 
       - name: "Install Terraform"
         uses: hashicorp/setup-terraform@v3
