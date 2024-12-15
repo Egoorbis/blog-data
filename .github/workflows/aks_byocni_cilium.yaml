@@ -38,7 +38,7 @@ jobs:
           scan-type: 'config' # Important: Scan IaC configuration
           format: 'table'
           exit-code: '1'       # Fail the workflow if vulnerabilities are found
-          # severity: 'CRITICAL,HIGH' # Only check for critical and high vulnerabilities (optional)
+          severity: 'CRITICAL,HIGH' # Only check for critical and high vulnerabilities (optional)
           # Specify the directory containing your Terraform files (if not at the root)
           # config-policy-namespaces: 'terraform' # Optional: Specify the policy namespace
           # ignore-unfixed: true # Optional: Ignore unfixed vulnerabilities
