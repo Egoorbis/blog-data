@@ -1,4 +1,4 @@
-name: "Secure Your Terraform with Trivy in GitHub Actions"
+name: "terraform-trivy-basic-scan"
 
 on:
   push:
