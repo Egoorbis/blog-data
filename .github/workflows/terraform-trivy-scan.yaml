@@ -35,14 +35,14 @@ jobs:
       - name: Run Trivy IaC scan
         uses: aquasecurity/trivy-action@0.29.0 # Use 'master' for latest or pin a specific version
         with:
-          scan-type: 'config' # Important: Scan IaC configuration
-          format: 'table'
-          exit-code: '1'       # Fail the workflow if vulnerabilities are found
-          severity: 'CRITICAL,HIGH' # Only check for critical and high vulnerabilities (optional)
-          # Specify the directory containing your Terraform files (if not at the root)
-          # config-policy-namespaces: 'terraform' # Optional: Specify the policy namespace
-          # ignore-unfixed: true # Optional: Ignore unfixed vulnerabilities
-          skip-dirs: '.terraform' # Optional: Skip directories like .terraform
+          scan-type: 'fs'
+          scanners: vuln,secret,misconfig
+          hide-progress: true
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+          skip-dirs: '.terraform'
           trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
           
 
