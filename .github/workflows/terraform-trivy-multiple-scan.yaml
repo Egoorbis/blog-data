@@ -37,7 +37,7 @@ jobs:
         with:
           scan-type: 'fs'
           scanners: vuln,secret,misconfig
-          format: 'markdown'
+          format: 'table'
           skip-dirs: '.terraform'
           trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
           hide-progress: true
