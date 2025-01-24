@@ -32,17 +32,6 @@ jobs:
       - name: "Code Checkout"
         uses: actions/checkout@v4
 
-      - name: Run Trivy IaC scan
-        uses: aquasecurity/trivy-action@0.29.0 # Use 'master' for latest or pin a specific version
-        with:
-          scan-type: 'fs'
-          scanners: vuln,secret,misconfig
-          format: 'table'
-          exit-code: '1'
-          severity: 'CRITICAL,HIGH'
-          skip-dirs: '.terraform'
-          trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
-          
       - name: "Install Terraform"
         uses: hashicorp/setup-terraform@v3
 
@@ -70,6 +59,12 @@ jobs:
           name: terraformPlan
           path: "tfplan"
 
-      - name: "Terraform Apply using Plan File"
-        id: apply
-        run: terraform apply tfplan
+      - name: Run Trivy IaC scan
+        uses: aquasecurity/trivy-action@0.29.0 # Use 'master' for latest or pin a specific version
+        with:
+          scan-type: 'fs'
+          scan.ref: "tfplan"
+          scanners: vuln,secret,misconfig
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
