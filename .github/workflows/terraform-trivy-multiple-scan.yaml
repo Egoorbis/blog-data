@@ -40,8 +40,7 @@ jobs:
           format: 'table'
           skip-dirs: '.terraform'
           trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
-          hide-progress: true
-          output: trivy.txt
+          output: $GITHUB_WORKSPACE/trivy.txt
           
       - name: Debug - Print working directory
         run: pwd
@@ -56,7 +55,7 @@ jobs:
               echo "<details><summary>Click to expand</summary>"
               echo ""
               echo '```terraform'
-              cat trivy.txt
+              cat $GITHUB_WORKSPACE/trivy.txt
               echo '```'
               echo "</details>"
             } >> $GITHUB_STEP_SUMMARY
