@@ -38,9 +38,10 @@ jobs:
           scan-type: 'fs'
           scanners: vuln,secret,misconfig
           format: 'table'
-          output: trivy.txt
           skip-dirs: '.terraform'
           trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
+          hide-progress: true
+          output: trivy.txt
 
       - name: Publish Trivy Output to Summary
         run: |
