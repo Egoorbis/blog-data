@@ -1,4 +1,4 @@
-name: "Basic Terraform OIDC and Entra Auth"
+name: "Secure Your Terraform with Trivy in GitHub Actions"
 
 on:
   push:
