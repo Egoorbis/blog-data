@@ -43,7 +43,7 @@ jobs:
           # config-policy-namespaces: 'terraform' # Optional: Specify the policy namespace
           # ignore-unfixed: true # Optional: Ignore unfixed vulnerabilities
           skip-dirs: '.terraform' # Optional: Skip directories like .terraform
-          scanners: "secret, vuln, misconfig"
+          scanners: secret,vuln,misconfig
           trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
           
 
