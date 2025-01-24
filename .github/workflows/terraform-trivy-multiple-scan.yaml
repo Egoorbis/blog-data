@@ -40,25 +40,22 @@ jobs:
           format: 'table'
           skip-dirs: '.terraform'
           trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
+          hide-progress: true
           output: $GITHUB_WORKSPACE/trivy.txt
-          
-      - name: Debug - Print working directory
-        run: pwd
-
-      - name: Debug - List files
-        run: ls -l
 
       - name: Publish Trivy Output to Summary
         run: |
+          if [[ -s trivy.txt ]]; then
             {
               echo "### Security Output"
               echo "<details><summary>Click to expand</summary>"
               echo ""
               echo '```terraform'
-              cat $GITHUB_WORKSPACE/trivy.txt
+              cat trivy.txt
               echo '```'
               echo "</details>"
             } >> $GITHUB_STEP_SUMMARY
+          fi        
 
       - name: Run High, Critical Trivy IaC scan
         uses: aquasecurity/trivy-action@master
