@@ -42,6 +42,12 @@ jobs:
           trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
           hide-progress: true
           output: trivy.txt
+          
+      - name: Debug - Print working directory
+        run: pwd
+
+      - name: Debug - List files
+        run: ls -l
 
       - name: Publish Trivy Output to Summary
         run: |
