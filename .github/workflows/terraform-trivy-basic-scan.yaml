@@ -42,12 +42,6 @@ jobs:
           severity: 'CRITICAL,HIGH'
           skip-dirs: '.terraform'
           trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
-
-      - name: Publish Trivy results
-        uses: actions/upload-artifact@v3
-        with:
-          name: trivy-results
-          path: trivy-results.json
           
       - name: "Install Terraform"
         uses: hashicorp/setup-terraform@v3
