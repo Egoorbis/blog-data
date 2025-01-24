@@ -51,19 +51,19 @@ jobs:
       - name: "Terraform Plan"
         id: plan
         run: |
-          terraform plan -out=tfplan
+          terraform plan -out=$GITHUB_WORKSPACE/tfplan
 
       - name: "Upload Terraform Plan to Working Directory"
         uses: actions/upload-artifact@v4
         with:
           name: terraformPlan
-          path: "tfplan"
+          path: "$GITHUB_WORKSPACE/tfplan"
 
       - name: Run Trivy IaC scan
         uses: aquasecurity/trivy-action@0.29.0 # Use 'master' for latest or pin a specific version
         with:
           scan-type: 'fs'
-          scan.ref: "tfplan"
+          scan-ref: "$GITHUB_WORKSPACE/tfplan"
           scanners: vuln,secret,misconfig
           format: 'table'
           exit-code: '1'
