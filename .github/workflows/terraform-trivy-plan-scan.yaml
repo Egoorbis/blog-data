@@ -53,6 +53,9 @@ jobs:
         run: |
           terraform plan -out=$GITHUB_WORKSPACE/tfplan
 
+      - name: List Files
+        run: ls -l $GITHUB_WORKSPACE
+
       - name: "Upload Terraform Plan to Working Directory"
         uses: actions/upload-artifact@v4
         with:
