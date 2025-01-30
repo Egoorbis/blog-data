@@ -10,14 +10,27 @@ permissions:
   id-token: write
 
 jobs:
-  gitleaks:
-    name: "Gitleaks Scan"
+  terraform:
+    name: "Terraform"
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ env.TERRAFORM_DIR }}
+    env:
+      TERRAFORM_DIR: trivy-scan 
+      TERRAFORM_LOG: "WARN"
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      BACKEND_RESOURCE_GROUP: ${{ secrets.BACKEND_RESOURCE_GROUP }}
+      BACKEND_STORAGE_ACCOUNT: ${{ secrets.BACKEND_STORAGE_ACCOUNT }}
+      BACKEND_CONTAINER_NAME: ${{ secrets.BACKEND_CONTAINER_NAME }}
+      BACKEND_KEY: ${{ secrets.BACKEND_KEY }}
+
     steps:
-      - name: Checkout code
+      - name: "Code Checkout"
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       
       - name: Install Gitleaks
         run: |
@@ -54,30 +67,6 @@ jobs:
       - name: Check for leaks
         if: steps.gitleaks.outcome == 'failure'
         run: exit 1
-
-  terraform:
-    name: "Terraform"
-    runs-on: ubuntu-latest
-    needs: gitleaks
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ env.TERRAFORM_DIR }}
-    env:
-      TERRAFORM_DIR: trivy-scan 
-      TERRAFORM_LOG: "WARN"
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      BACKEND_RESOURCE_GROUP: ${{ secrets.BACKEND_RESOURCE_GROUP }}
-      BACKEND_STORAGE_ACCOUNT: ${{ secrets.BACKEND_STORAGE_ACCOUNT }}
-      BACKEND_CONTAINER_NAME: ${{ secrets.BACKEND_CONTAINER_NAME }}
-      BACKEND_KEY: ${{ secrets.BACKEND_KEY }}
-
-    steps:
-      - name: "Code Checkout"
-        uses: actions/checkout@v4
-      
 
       - name: Run Initial Trivy IaC scan
         uses: aquasecurity/trivy-action@master
