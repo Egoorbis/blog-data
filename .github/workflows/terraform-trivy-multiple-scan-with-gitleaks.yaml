@@ -19,12 +19,25 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Install Gitleaks
+        run: |
+          wget https://github.com/zricethezav/gitleaks/releases/download/v8.18.1/gitleaks_8.18.1_linux_x64.tar.gz
+          tar -xzf gitleaks_8.18.1_linux_x64.tar.gz
+          sudo mv gitleaks /usr/local/bin/
+
       - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          working-directory: trivy-scan
+        run: gitleaks detect --source . -v
+        continue-on-error: true
+
+      - name: Check Gitleaks Output
+        run: |
+          if [ -f leak_report.json ]; then
+            echo "Leaks found. Check the leak_report.json file."
+            cat leak_report.json
+            exit 1
+          else
+            echo "No leaks found."
+          fi
 
   terraform:
     name: "Terraform"
