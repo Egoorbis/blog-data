@@ -1,0 +1,106 @@
+name: "terraform-trivy-multiple-scan-with-gitleaks"
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  terraform:
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ env.TERRAFORM_DIR }}
+    env:
+      TERRAFORM_DIR: trivy-scan 
+      TERRAFORM_LOG: "WARN"
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      BACKEND_RESOURCE_GROUP: ${{ secrets.BACKEND_RESOURCE_GROUP }}
+      BACKEND_STORAGE_ACCOUNT: ${{ secrets.BACKEND_STORAGE_ACCOUNT }}
+      BACKEND_CONTAINER_NAME: ${{ secrets.BACKEND_CONTAINER_NAME }}
+      BACKEND_KEY: ${{ secrets.BACKEND_KEY }}
+
+    steps:
+      - name: "Code Checkout"
+        uses: actions/checkout@v4
+      
+      - name: "GitLeaks"
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITLEAKS_ENABLE_SUMMARY: true
+
+      - name: Run Initial Trivy IaC scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scanners: vuln,secret,misconfig
+          format: 'table'
+          skip-dirs: '.terraform'
+          trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
+          hide-progress: true
+          output: $GITHUB_WORKSPACE/trivy.txt
+
+      - name: Publish Trivy Output to Summary
+        run: |
+          if [[ -s $GITHUB_WORKSPACE/trivy.txt ]]; then
+            {
+              echo "### Security Output"
+              echo "<details><summary>Click to expand</summary>"
+              echo ""
+              echo '```terraform'
+              cat $GITHUB_WORKSPACE/trivy.txt
+              echo '```'
+              echo "</details>"
+            } >> $GITHUB_STEP_SUMMARY
+          fi        
+
+      - name: Run High, Critical Trivy IaC scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scanners: vuln,secret,misconfig
+          hide-progress: true
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+          skip-dirs: '.terraform'
+          trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
+          skip-setup-trivy: true
+          
+      - name: "Install Terraform"
+        uses: hashicorp/setup-terraform@v3
+
+      - name: "Terraform Version"
+        id: version
+        run: terraform --version
+
+      - name: "Terraform Init"
+        id: init
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=$BACKEND_RESOURCE_GROUP" \
+            -backend-config="storage_account_name=$BACKEND_STORAGE_ACCOUNT" \
+            -backend-config="container_name=$BACKEND_CONTAINER_NAME" \
+            -backend-config="key=$BACKEND_KEY" \
+
+      - name: "Terraform Plan"
+        id: plan
+        run: |
+          terraform plan -out=tfplan
+
+      - name: "Upload Terraform Plan to Working Directory"
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraformPlan
+          path: "tfplan"
+
+      - name: "Terraform Apply using Plan File"
+        id: apply
+        run: terraform apply tfplan
