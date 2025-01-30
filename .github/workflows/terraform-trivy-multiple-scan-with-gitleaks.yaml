@@ -43,16 +43,15 @@ jobs:
           {
             echo '## Gitleaks Scan Results'
             if [[ "${{ steps.gitleaks.outcome }}" == "failure" ]]; then
-              echo '🚨 Gitleaks found potential secrets in your code.'
+              echo ':warning: Gitleaks found potential secrets in your code.'
               echo '### Detected Leaks:'
               echo '```
-              echo "$GITLEAKS_OUTPUT" | sed 's/`/\\`/g'
+              echo "${GITLEAKS_OUTPUT}" | sed 's/`/\\`/g'
               echo '```'
             else
-              echo '✅ No leaks detected by Gitleaks.'
+              echo ':white_check_mark: No leaks detected by Gitleaks.'
             fi
-          } >> $GITHUB_STEP_SUMMARY
-      
+          } >> "$GITHUB_STEP_SUMMARY"
 
   terraform:
     name: "Terraform"
