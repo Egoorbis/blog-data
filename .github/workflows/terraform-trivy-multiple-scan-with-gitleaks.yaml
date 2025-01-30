@@ -32,7 +32,7 @@ jobs:
       - name: "Code Checkout"
         uses: actions/checkout@v4
         with:
-          path: ${{ env.TERRAFORM_DIR }}
+          fetch-depth: 0
       
       - name: "GitLeaks"
         uses: gitleaks/gitleaks-action@v2
