@@ -36,22 +36,17 @@ jobs:
 
       - name: Add Gitleaks results to summary
         if: always()
-        env:
-          GITLEAKS_OUTPUT: ${{ steps.gitleaks.outputs.gitleaks_output }}
-        shell: bash
         run: |
-          {
-            echo '## Gitleaks Scan Results'
-            if [[ "${{ steps.gitleaks.outcome }}" == "failure" ]]; then
-              echo ':warning: Gitleaks found potential secrets in your code.'
-              echo '### Detected Leaks:'
-              echo '```
-              echo "${GITLEAKS_OUTPUT}" | sed 's/`/\\`/g'
-              echo '```'
-            else
-              echo ':white_check_mark: No leaks detected by Gitleaks.'
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
+          echo "## Gitleaks Scan Results" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ steps.gitleaks.outcome }}" == "failure" ]]; then
+            echo "⚠️ Gitleaks found potential secrets in your code." >> $GITHUB_STEP_SUMMARY
+            echo "### Detected Leaks:" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "${{ steps.gitleaks.outputs.gitleaks_output }}" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No leaks detected by Gitleaks." >> $GITHUB_STEP_SUMMARY
+          fi
 
   terraform:
     name: "Terraform"
