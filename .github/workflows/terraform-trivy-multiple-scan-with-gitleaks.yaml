@@ -31,6 +31,10 @@ jobs:
     steps:
       - name: "Code Checkout"
         uses: actions/checkout@v4
+      - name: Show current directory
+        run: pwd
+      - name: List all files
+        run: ls -alR
       
       - name: "Install Gitleaks"
         run: |
