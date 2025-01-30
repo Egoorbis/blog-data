@@ -29,7 +29,7 @@ jobs:
         id: gitleaks
         run: |
           # Run gitleaks and strip ANSI escape codes
-          gitleaks detect --source . -v 2>&1 | sed 's/\x1b\[[0-9;]*m//g' > gitleaks_output.txt
+          gitleaks detect --source . -v --no-banner > gitleaks_output.txt
         continue-on-error: true
         
       - name: Add Gitleaks results to summary
