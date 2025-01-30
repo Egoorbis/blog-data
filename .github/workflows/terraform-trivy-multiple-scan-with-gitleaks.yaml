@@ -19,26 +19,38 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Install Gitleaks
+        run: |
+          wget https://github.com/zricethezav/gitleaks/releases/download/v8.18.1/gitleaks_8.18.1_linux_x64.tar.gz
+          tar -xzf gitleaks_8.18.1_linux_x64.tar.gz
+          sudo mv gitleaks /usr/local/bin/
+
       - name: Run Gitleaks
         id: gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          output=$(gitleaks detect --source . -v)
+          echo "gitleaks_output<<EOF" >> $GITHUB_OUTPUT
+          echo "$output" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
         continue-on-error: true
 
       - name: Add Gitleaks results to summary
         if: always()
         run: |
           echo "## Gitleaks Scan Results" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.gitleaks.outcome }}" == "failure" ]; then
+          if [[ "${{ steps.gitleaks.outcome }}" == "failure" ]]; then
             echo "🚨 Gitleaks found potential secrets in your code." >> $GITHUB_STEP_SUMMARY
             echo "### Detected Leaks:" >> $GITHUB_STEP_SUMMARY
             echo '```
-            ${{ steps.gitleaks.outputs.output }} >> $GITHUB_STEP_SUMMARY
+            echo "${{ steps.gitleaks.outputs.gitleaks_output }}" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           else
             echo "✅ No leaks detected by Gitleaks." >> $GITHUB_STEP_SUMMARY
           fi
+
+      - name: Check for leaks
+        if: steps.gitleaks.outcome == 'failure'
+        run: exit 1
 
   terraform:
     name: "Terraform"
