@@ -28,11 +28,8 @@ jobs:
       - name: Run Gitleaks
         id: gitleaks
         run: |
-          output=$(gitleaks detect --source . -v)
-          echo "gitleaks_output<<EOF" >> $GITHUB_OUTPUT
-          echo "$output" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-        continue-on-error: true
+          gitleaks detect --source . -v 2>&1 | tee gitleaks_output.txt
+          cat gitleaks_output.txt >> $GITHUB_OUTPUT
       
       - name: Add Gitleaks results to summary
         if: always()
@@ -42,7 +39,7 @@ jobs:
             echo "⚠️ Gitleaks found potential secrets in your code." >> $GITHUB_STEP_SUMMARY
             echo "### Detected Leaks:" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
-            echo "${{ steps.gitleaks.outputs.output }}" >> $GITHUB_STEP_SUMMARY
+            cat gitleaks_output.txt >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           else
             echo "✅ No leaks detected by Gitleaks." >> $GITHUB_STEP_SUMMARY
