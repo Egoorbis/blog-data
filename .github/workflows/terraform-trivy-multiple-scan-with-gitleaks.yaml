@@ -35,7 +35,7 @@ jobs:
       - name: "GitLeaks"
         uses: gitleaks/gitleaks-action@v2
         with:
-          config: ""
+          args: detect --source ${{ env.TERRAFORM_DIR }} --verbose
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_ENABLE_SUMMARY: true
