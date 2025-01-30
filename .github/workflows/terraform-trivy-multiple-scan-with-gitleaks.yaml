@@ -28,9 +28,9 @@ jobs:
       - name: Run Gitleaks
         id: gitleaks
         run: |
-          output=$(gitleaks detect --source . -v)
+          gitleaks_output=$(gitleaks detect --source . -v | tee /dev/tty)
           echo "gitleaks_output<<EOF" >> $GITHUB_OUTPUT
-          echo "$output" >> $GITHUB_OUTPUT
+          echo "$gitleaks_output" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
         continue-on-error: true
 
@@ -47,6 +47,10 @@ jobs:
           else
             echo "✅ No leaks detected by Gitleaks." >> $GITHUB_STEP_SUMMARY
           fi
+      
+      - name: Check for leaks
+        if: steps.gitleaks.outcome == 'failure'
+        run: exit 1
 
   terraform:
     name: "Terraform"
@@ -70,10 +74,15 @@ jobs:
     steps:
       - name: "Code Checkout"
         uses: actions/checkout@v4
-      - name: Show current directory
-        run: pwd
-      - name: List all files
-        run: ls -alR
+      
+      - name: "Install Gitleaks"
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.2.0/gitleaks_8.2.0_linux_x64.tar.gz | tar -xz -C /usr/local/bin gitleaks
+
+      - name: "Run Gitleaks"
+        run: gitleaks detect --source ${{ env.TERRAFORM_DIR }} --verbose
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Initial Trivy IaC scan
         uses: aquasecurity/trivy-action@master
