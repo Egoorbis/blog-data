@@ -42,7 +42,7 @@ jobs:
             echo "⚠️ Gitleaks found potential secrets in your code." >> $GITHUB_STEP_SUMMARY
             echo "### Detected Leaks:" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
-            echo "${{ steps.gitleaks.outputs.gitleaks_output }}" >> $GITHUB_STEP_SUMMARY
+            echo "${{ steps.gitleaks.outputs.output }}" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           else
             echo "✅ No leaks detected by Gitleaks." >> $GITHUB_STEP_SUMMARY
