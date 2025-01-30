@@ -31,11 +31,11 @@ jobs:
     steps:
       - name: "Code Checkout"
         uses: actions/checkout@v4
+        with:
+          path: ${{ env.TERRAFORM_DIR }}
       
       - name: "GitLeaks"
         uses: gitleaks/gitleaks-action@v2
-        with:
-          verbose: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_ENABLE_SUMMARY: true
