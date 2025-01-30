@@ -18,7 +18,7 @@ jobs:
         shell: bash
         working-directory: ${{ env.TERRAFORM_DIR }}
     env:
-      TERRAFORM_DIR: aks_byocni_cilium 
+      TERRAFORM_DIR: trivy-scan 
       TERRAFORM_LOG: "WARN"
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
