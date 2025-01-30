@@ -39,7 +39,7 @@ jobs:
           if [[ "${{ steps.gitleaks.outcome }}" == "failure" ]]; then
             echo "⚠️ Gitleaks found potential secrets in your code." >> $GITHUB_STEP_SUMMARY
             echo "### Detected Leaks:" >> $GITHUB_STEP_SUMMARY
-            echo '```
+            echo '```' >> $GITHUB_STEP_SUMMARY
             # Format and clean the output
             grep -v "^[[:space:]]*$" gitleaks_output.txt | \
             grep -v "^    ○" | \
