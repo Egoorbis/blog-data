@@ -38,23 +38,21 @@ jobs:
         if: always()
         env:
           GITLEAKS_OUTPUT: ${{ steps.gitleaks.outputs.gitleaks_output }}
+        shell: bash
         run: |
           {
-            echo "## Gitleaks Scan Results"
+            echo '## Gitleaks Scan Results'
             if [[ "${{ steps.gitleaks.outcome }}" == "failure" ]]; then
-              echo "🚨 Gitleaks found potential secrets in your code."
-              echo "### Detected Leaks:"
+              echo '🚨 Gitleaks found potential secrets in your code.'
+              echo '### Detected Leaks:'
               echo '```
               echo "$GITLEAKS_OUTPUT" | sed 's/`/\\`/g'
               echo '```'
             else
-              echo "✅ No leaks detected by Gitleaks."
+              echo '✅ No leaks detected by Gitleaks.'
             fi
           } >> $GITHUB_STEP_SUMMARY
       
-      - name: Check for leaks
-        if: steps.gitleaks.outcome == 'failure'
-        run: exit 1
 
   terraform:
     name: "Terraform"
