@@ -36,6 +36,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
+          scan-ref: ${{ env.TERRAFORM_DIR }}
           scanners: vuln,secret,misconfig
           format: 'table'
           skip-dirs: '.terraform'
