@@ -62,6 +62,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
+          scan-ref: ${{ env.TERRAFORM_DIR }}
           scanners: vuln,secret,misconfig
           hide-progress: true
           severity: 'CRITICAL,HIGH'
