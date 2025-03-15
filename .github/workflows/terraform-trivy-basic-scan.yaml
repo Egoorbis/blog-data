@@ -36,6 +36,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.29.0 # Use 'master' for latest or pin a specific version
         with:
           scan-type: 'fs'
+          scan-ref: ${{ env.TERRAFORM_DIR }}
           scanners: vuln,secret,misconfig
           format: 'table'
           exit-code: '1'
