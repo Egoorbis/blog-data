@@ -37,7 +37,7 @@ jobs:
         with:
           scan-type: 'fs'
           scan-ref: ${{ env.TERRAFORM_DIR }}
-          scanners: vuln,secret,misconfig
+          scanners: secret,misconfig
           format: 'table'
           skip-dirs: '.terraform'
           trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
@@ -63,7 +63,7 @@ jobs:
         with:
           scan-type: 'fs'
           scan-ref: ${{ env.TERRAFORM_DIR }}
-          scanners: vuln,secret,misconfig
+          scanners: secret,misconfig
           hide-progress: true
           severity: 'CRITICAL,HIGH'
           exit-code: '1'

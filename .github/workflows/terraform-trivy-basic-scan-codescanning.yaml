@@ -38,11 +38,17 @@ jobs:
           scan-type: 'fs'
           scan-ref: ${{ env.TERRAFORM_DIR }}
           scanners: secret,misconfig
-          format: 'table'
+          format: 'sarif'
+          output: "trivy-results.sarif"
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
           skip-dirs: '.terraform'
           trivyignores: ${{ env.TERRAFORM_DIR }}/.trivyignore
+      
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
           
       - name: "Install Terraform"
         uses: hashicorp/setup-terraform@v3
