@@ -1,4 +1,4 @@
-name: "terraform-trivy-multiple-scan-with-gitleaks"
+name: "terraform-trivy-multiple-scan-with-gitleaks-manual"
 
 on:
   push:
